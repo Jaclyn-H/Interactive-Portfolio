@@ -479,18 +479,18 @@ html, body {
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
+<script></script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
 const NODES = [
   // CENTER
   {
     id: 'center', label: 'Jaclyn Hauben', x: 0, y: 0, z: 0,
     size: 1.5, color: 0xc4633a, ring: true,
-    category: 'Hello!', title: 'Jaclyn Hauben',
+    category: 'Welcome to my universe!', title: 'Jaclyn Hauben',
     color2: '#c4633a',
     content: `
       <div class="panel-item">
-        <div class="item-title">Computer Science Student</div>
+        <div class="item-title">BS, Computer Science</div>
         <div class="item-sub">University of Wisconsin – Madison</div>
         <div class="item-body">
           <p>GPA: 3.9/4.0 · Dean's List · Class of 2028</p>
@@ -516,7 +516,7 @@ const NODES = [
         <div class="item-date">📍 Madison, WI · Expected May 2028</div>
         <div class="item-body">
           <ul>
-            <li><strong>GPA: 3.9/4.0</strong> — Dean's List every semester</li>
+            <li><strong>GPA: 3.9/4.0</strong> — Dean's List</li>
             <li>Relevant coursework: Algorithms, Machine Organization & Programming, Data Structures, AI/ML</li>
           </ul>
         </div>
@@ -525,30 +525,13 @@ const NODES = [
           <span class="tag" style="background:#dceedd;color:#6b8c6e;">Data Science Minor</span>
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">3.9 GPA</span>
         </div>
-      </div>
-      <div class="panel-item">
-        <div class="item-title">Stanford ID Coding & AI Academy</div>
-        <div class="item-sub">Scholar</div>
-        <div class="item-date">📍 Stanford, CA · July 2022</div>
-        <div class="item-body">
-          <ul>
-            <li>Engineered ML programs to analyze kinesics — responding to 6+ hand movements with reactive responses</li>
-            <li>Collaborated with Stanford scholars on neural networks</li>
-            <li>Completed 3 major projects in computer science applications</li>
-          </ul>
-        </div>
-        <div class="tag-row">
-          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Machine Learning</span>
-          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Neural Networks</span>
-          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Kinesics AI</span>
-        </div>
       </div>`
   },
   // EXPERIENCE
   {
     id: 'exp', label: 'Experience', x: 3.2, y: 0.8, z: 1.8,
     size: 1.0, color: 0xc9953a,
-    category: 'Experience', title: 'Work Experience',
+    category: 'Experience', title: 'Experience',
     color2: '#c9953a',
     content: `
       <div class="panel-item">
@@ -579,12 +562,29 @@ const NODES = [
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">Curriculum Design</span>
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">Team Management</span>
         </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Stanford ID Coding & AI Academy</div>
+        <div class="item-sub">Scholar</div>
+        <div class="item-date">📍 Stanford, CA · July 2022</div>
+        <div class="item-body">
+          <ul>
+            <li>Engineered ML programs to analyze kinesics — responding to 6+ hand movements with reactive responses</li>
+            <li>Collaborated with Stanford scholars on neural networks</li>
+            <li>Completed 3 major projects in computer science applications</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Machine Learning</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Neural Networks</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Kinesics AI</span>
+        </div>
       </div>`
   },
   // PROJECTS
   {
     id: 'proj', label: 'Projects', x: 0.5, y: -3.0, z: 2.0,
-    size: 1.0, color: 0x8e6b8a,
+    size: 1.0, color: 0x9C2E35,
     category: 'Projects', title: 'What I\'ve Built',
     color2: '#8e6b8a',
     content: `
@@ -628,6 +628,20 @@ const NODES = [
           <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Git</span>
           <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Linux</span>
           <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Dijkstra's</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">📀 Jukebox Program</div>
+        <div class="item-date">September – December 2024</div>
+        <div class="item-body">
+          <ul>
+            <li>Improved song retrieval speed by <strong>30 percent</strong> through implementing advanced <strong>sorting algorithms</strong> in Java for a jukebox simulation program</li>
+            <li>Enhanced data retrieval efficiency by designing storage functions using <strong>linked lists, queues, and stacks</strong></li>
+            <li>Coordinated development team tasks and project checkpoints to ensure on-time project delivery</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Java</span>
         </div>
       </div>`
   },
@@ -712,6 +726,21 @@ const NODES = [
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">Acoustics</span>
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">NextEra Energy</span>
         </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Information Systems Society</div>
+        <div class="item-sub">University of Wisconsin – Madison</div>
+        <div class="item-date">January 2025 – Present</div>
+        <div class="item-body">
+          <ul>
+            <li>Collaborated with fellow computer science, data science, and business majors to apply career strategies and examine real-life work experiences</li>
+            <li>Learned the intricate inner workings of top tech and consulting companies, networking with recruiters</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Networking</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Collaboration</span>
+        </div>
       </div>`
   },
   // AWARDS
@@ -758,7 +787,7 @@ const NODES = [
         <div class="item-title">Natural Language Processing</div>
         <div class="item-body"><ul>
           <li>OpenAI API integration for recipe generation</li>
-          <li>AI Prompt Engineering (listed as skill)</li>
+          <li>AI Prompt Engineering</li>
           <li>Fish Audio voice synthesis pipeline</li>
         </ul></div>
       </div>
