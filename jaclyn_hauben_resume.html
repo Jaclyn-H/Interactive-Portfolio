@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaclyn Hauben — Interactive Resume</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  --cream: #fdf6ed;
+  --warm-white: #fffbf5;
+  --terracotta: #c4633a;
+  --terracotta-light: #d97e5a;
+  --terracotta-pale: #f0d5c8;
+  --sage: #6b8c6e;
+  --sage-light: #a8c5a0;
+  --sage-pale: #dceedd;
+  --gold: #c9953a;
+  --gold-pale: #f5e4c3;
+  --mauve: #8e6b8a;
+  --mauve-pale: #e8d5e6;
+  --sky: #4a7fa5;
+  --sky-pale: #d0e8f5;
+  --dark: #2a1f1a;
+  --dark-mid: #4a3728;
+  --text: #3a2a22;
+  --text-dim: #7a6358;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  cursor: none;
+}
+
+/* ── SHOOTING STARS (inside splash only) ── */
+.star {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 3px rgba(196,99,58,0.15),
+    0 0 0 6px rgba(196,99,58,0.08),
+    0 0 12px rgba(196,99,58,0.4);
+  animation: shootingStar 2.5s linear infinite;
+  pointer-events: none;
+  opacity: 0.4;
+}
+.star::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 180px; height: 1px;
+  background: linear-gradient(90deg, rgba(196,99,58,0.7), transparent);
+}
+@keyframes shootingStar {
+  0%   { transform: rotate(315deg) translateX(0);       opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: rotate(315deg) translateX(-800px);  opacity: 0; }
+}
+/* stagger each star */
+.star:nth-child(1)  { top: 5%;   right: 5%;    animation-delay: 0s;    animation-duration: 1.8s; }
+.star:nth-child(2)  { top: 0%;   right: 15%;   animation-delay: 0.4s;  animation-duration: 2.5s; }
+.star:nth-child(3)  { top: 12%;  right: 2%;    animation-delay: 0.8s;  animation-duration: 4.9s; }
+.star:nth-child(4)  { top: 0%;   right: 30%;   animation-delay: 1.0s;  animation-duration: 2.9s; }
+.star:nth-child(5)  { top: 2%;   right: 50%;   animation-delay: 1.4s;  animation-duration: 1.9s; }
+.star:nth-child(6)  { top: 0%;   right: 65%;   animation-delay: 0.2s;  animation-duration: 7.9s; }
+.star:nth-child(7)  { top: 20%;  right: 0%;    animation-delay: 1.8s;  animation-duration: 1.9s; }
+.star:nth-child(8)  { top: 0%;   right: 75%;   animation-delay: 2.2s;  animation-duration: 2.9s; }
+.star:nth-child(9)  { top: 8%;   right: 88%;   animation-delay: 0.6s;  animation-duration: 2.1s; }
+.star:nth-child(10) { top: 35%;  right: 0%;    animation-delay: 1.2s;  animation-duration: 3.9s; }
+.star:nth-child(11) { top: 0%;   right: 42%;   animation-delay: 2.6s;  animation-duration: 4.0s; }
+.star:nth-child(12) { top: 18%;  right: 55%;   animation-delay: 3.0s;  animation-duration: 2.9s; }
+
+/* CUSTOM CURSOR */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--terracotta);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: multiply;
+}
+#cursor.hovering {
+  width: 32px; height: 32px;
+  background: var(--gold);
+  opacity: 0.7;
+}
+
+/* CANVAS */
+#canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 2; /* Higher than #stars */
+  background: transparent; /* Ensure no CSS background is blocking */
+}
+
+/* PARTICLE CANVAS */
+#particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+
+/* HEADER */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: 1.5rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(253,246,237,0.95) 0%, transparent 100%);
+}
+
+.header-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.02em;
+}
+.header-name span {
+  color: var(--terracotta);
+  font-style: italic;
+}
+
+.header-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.header-links a {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  cursor: none;
+}
+.header-links a:hover { color: var(--terracotta); }
+
+/* HINT */
+#hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: hintPulse 3s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes hintPulse {
+  0%,100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* NODE LABELS (HTML overlays) */
+.node-label {
+  position: fixed;
+  pointer-events: none;
+  z-index: 20;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+.node-label .label-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text);
+  background: rgba(253,246,237,0.92);
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid rgba(196,99,58,0.2);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  letter-spacing: 0.02em;
+}
+
+/* DETAIL PANEL */
+#panel {
+  position: fixed;
+  top: 0; right: 0;
+  width: min(420px, 100vw);
+  height: 100%;
+  background: var(--warm-white);
+  z-index: 100;
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  box-shadow: -8px 0 40px rgba(58,42,34,0.12);
+  border-left: 1px solid rgba(196,99,58,0.15);
+}
+#panel.open { transform: translateX(0); }
+
+#panel-inner {
+  padding: 5rem 2rem 3rem;
+  min-height: 100%;
+}
+
+.panel-close {
+  position: absolute;
+  top: 1.5rem; right: 1.5rem;
+  width: 36px; height: 36px;
+  background: var(--terracotta-pale);
+  border: none;
+  border-radius: 50%;
+  cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: var(--terracotta);
+  transition: background 0.2s, transform 0.2s;
+}
+.panel-close:hover { background: var(--terracotta); color: white; transform: rotate(90deg); }
+
+.panel-category {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: var(--dark);
+}
+
+.panel-divider {
+  width: 40px; height: 2px;
+  border-radius: 2px;
+  margin-bottom: 1.5rem;
+}
+
+.panel-item {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: var(--cream);
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.item-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 0.2rem;
+}
+.item-sub {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+  font-weight: 500;
+}
+.item-date {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+  opacity: 0.7;
+}
+.item-body {
+  font-size: 0.83rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+.item-body ul { padding-left: 1.2rem; }
+.item-body li { margin-bottom: 0.35rem; }
+
+/* TAGS */
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.tag {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.62rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* STARS */
+#stars {
+  position: fixed;
+  inset: 0;
+  z-index: 1; /* was -1 */
+  pointer-events: none;
+}
+
+/* INTRO SPLASH */
+#splash {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  transition: opacity 0.8s ease, visibility 0.8s;
+}
+#splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.splash-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+  color: var(--dark);
+  text-align: center;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  animation: splashIn 1s cubic-bezier(0.16,1,0.3,1) both;
+}
+.splash-title em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.splash-sub {
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  animation: splashIn 1s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+}
+.splash-btn {
+  margin-top: 1.5rem;
+  padding: 0.85rem 2.5rem;
+  background: var(--terracotta);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: none;
+  animation: splashIn 1s 0.4s cubic-bezier(0.16,1,0.3,1) both;
+  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0 4px 20px rgba(196,99,58,0.3);
+}
+.splash-btn:hover { background: var(--terracotta-light); transform: scale(1.04); }
+
+.splash-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+@keyframes splashIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes orbFloat {
+  0%,100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+  #panel { width: 100vw; }
+  #header { padding: 1rem 1.25rem; }
+  .header-name { font-size: 1.1rem; }
+  .header-links { gap: 1rem; }
+  .header-links a { font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-orbs">
+    <div class="orb" style="width:400px;height:400px;background:var(--terracotta-pale);top:-100px;left:-100px;animation-delay:0s;"></div>
+    <div class="orb" style="width:300px;height:300px;background:var(--sage-pale);bottom:-50px;right:-50px;animation-delay:2s;"></div>
+    <div class="orb" style="width:250px;height:250px;background:var(--gold-pale);top:40%;left:60%;animation-delay:4s;"></div>
+  </div>
+  <div class="splash-title">Jaclyn<br><em>Hauben</em></div>
+  <div class="splash-sub">Computer Science · UW–Madison · Class of 2028</div>
+  <button class="splash-btn" onclick="enterSite()">Explore My Universe →</button>
+</div>
+
+<!-- SHOOTING STARS BACKGROUND -->
+<div id="stars">
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+  <span class="star"></span>
+</div>
+
+<!-- BACKGROUND CANVAS -->
+<canvas id="canvas"></canvas>
+<canvas id="particles"></canvas>
+
+<!-- HEADER -->
+<div id="header">
+  <div class="header-name">Jaclyn <span>Hauben</span></div>
+  <div class="header-links">
+    <a href="https://linkedin.com/in/jaclynhauben" target="_blank">LinkedIn</a>
+    <a href="https://github.com/Jaclyn-H" target="_blank">GitHub</a>
+  </div>
+  
+</div>
+
+<!-- HINT -->
+<div id="hint">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+  Drag to rotate · Click nodes to explore
+</div>
+
+<!-- NODE LABELS CONTAINER -->
+<div id="labels"></div>
+
+<!-- DETAIL PANEL -->
+<div id="panel">
+  <div id="panel-inner">
+    <button class="panel-close" onclick="closePanel()">✕</button>
+    <div class="panel-category" id="p-cat"></div>
+    <div class="panel-title" id="p-title"></div>
+    <div class="panel-divider" id="p-div"></div>
+    <div id="p-content"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const NODES = [
+  // CENTER
+  {
+    id: 'center', label: 'Jaclyn Hauben', x: 0, y: 0, z: 0,
+    size: 1.5, color: 0xc4633a, ring: true,
+    category: 'Hello!', title: 'Jaclyn Hauben',
+    color2: '#c4633a',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">Computer Science Student</div>
+        <div class="item-sub">University of Wisconsin – Madison</div>
+        <div class="item-body">
+          <p>GPA: 3.9/4.0 · Dean's List · Class of 2028</p>
+          <p style="margin-top:0.5rem;">Incoming Software Developer Intern at Sentry Insurance · Passionate about AI, full-stack development, and building things that matter.</p>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f0d5c8;color:#c4633a;">CS Major</span>
+          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Data Science Minor</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Dean's List</span>
+        </div>
+      </div>`
+  },
+  // EDUCATION
+  {
+    id: 'edu', label: 'Education', x: -3.5, y: 1.2, z: 1.5,
+    size: 1.0, color: 0x6b8c6e,
+    category: 'Education', title: 'University of Wisconsin – Madison',
+    color2: '#6b8c6e',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">Bachelor of Science in Computer Sciences</div>
+        <div class="item-sub">Minor in Data Science</div>
+        <div class="item-date">📍 Madison, WI · Expected May 2028</div>
+        <div class="item-body">
+          <ul>
+            <li><strong>GPA: 3.9/4.0</strong> — Dean's List every semester</li>
+            <li>Relevant coursework: Algorithms, Machine Organization & Programming, Data Structures, AI/ML</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Computer Science</span>
+          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Data Science Minor</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">3.9 GPA</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Stanford ID Coding & AI Academy</div>
+        <div class="item-sub">Scholar</div>
+        <div class="item-date">📍 Stanford, CA · July 2022</div>
+        <div class="item-body">
+          <ul>
+            <li>Engineered ML programs to analyze kinesics — responding to 6+ hand movements with reactive responses</li>
+            <li>Collaborated with Stanford scholars on neural networks</li>
+            <li>Completed 3 major projects in computer science applications</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Machine Learning</span>
+          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Neural Networks</span>
+          <span class="tag" style="background:#dceedd;color:#6b8c6e;">Kinesics AI</span>
+        </div>
+      </div>`
+  },
+  // EXPERIENCE
+  {
+    id: 'exp', label: 'Experience', x: 3.2, y: 0.8, z: 1.8,
+    size: 1.0, color: 0xc9953a,
+    category: 'Experience', title: 'Work Experience',
+    color2: '#c9953a',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">Software Developer Intern</div>
+        <div class="item-sub">Sentry Insurance</div>
+        <div class="item-date">📍 Stevens Point, WI · May 2026 – Aug 2026 (Incoming)</div>
+        <div class="item-body">
+          <p>Incoming software engineering role — excited to apply full-stack and AI skills in a professional insurance technology environment.</p>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Incoming</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Software Engineering</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Court Manager</div>
+        <div class="item-sub">Yardley Makefield Tennis Club</div>
+        <div class="item-date">📍 Yardley, PA · April 2021 – June 2025</div>
+        <div class="item-body">
+          <ul>
+            <li>Directed activities of <strong>100+ players</strong> across 5 springs and summers</li>
+            <li>Designed comprehensive lesson plans for all ages, spanning <strong>5+ unique program offerings</strong></li>
+            <li>Conducted dynamic drills prioritizing safety, technique, and enjoyment</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Leadership</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Curriculum Design</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Team Management</span>
+        </div>
+      </div>`
+  },
+  // PROJECTS
+  {
+    id: 'proj', label: 'Projects', x: 0.5, y: -3.0, z: 2.0,
+    size: 1.0, color: 0x8e6b8a,
+    category: 'Projects', title: 'What I\'ve Built',
+    color2: '#8e6b8a',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">🍳 SousChef</div>
+        <div class="item-sub">AI-Powered Cooking Assistant</div>
+        <div class="item-date">🏆 WI's Largest 24-Hour Hackathon · November 2025</div>
+        <div class="item-body">
+          <ul>
+            <li>Leveraged computer vision + NLP to generate personalized recipes from on-hand ingredients — addressing the US's <strong>40% annual food waste</strong></li>
+            <li>Architected full-stack pipeline with <strong>YOLOv8</strong> for real-time ingredient detection</li>
+            <li>Integrated <strong>Fish Audio</strong> for hands-free voice cooking guidance</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">React Native</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">TypeScript</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Node.js</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Flask</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Firebase</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">AWS</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">OpenAI</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">YOLOv8</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">🗺️ UW-Madison Campus Navigator</div>
+        <div class="item-sub">Pathfinding & Data Structures</div>
+        <div class="item-date">March – May 2025</div>
+        <div class="item-body">
+          <ul>
+            <li>Implemented <strong>Dijkstra's algorithm</strong> to analyze pathways across Madison city buildings</li>
+            <li>Designed collision resolution and hash table optimization for large datasets</li>
+            <li>Achieved <strong>20% search efficiency improvement</strong></li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Java</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">HTML/CSS</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">JavaScript</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Git</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Linux</span>
+          <span class="tag" style="background:#e8d5e6;color:#8e6b8a;">Dijkstra's</span>
+        </div>
+      </div>`
+  },
+  // SKILLS
+  {
+    id: 'skills', label: 'Skills', x: -2.5, y: -2.2, z: -1.5,
+    size: 1.0, color: 0x4a7fa5,
+    category: 'Technical Skills', title: 'My Toolkit',
+    color2: '#4a7fa5',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">Programming Languages</div>
+        <div class="item-body"><p>Java, Python, JavaScript, TypeScript, C/C++, HTML/CSS, R, Swift, React Native, Node.js, Flask</p></div>
+        <div class="tag-row">
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Java</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Python</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">JavaScript</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">TypeScript</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">C/C++</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">React Native</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Swift</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">R</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Frameworks & Cloud</div>
+        <div class="tag-row">
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Node.js</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Flask</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">AWS</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Firebase</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Developer Tools</div>
+        <div class="tag-row">
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Git / GitHub</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Linux</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">IntelliJ</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Eclipse</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">RStudio</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">Cursor</span>
+          <span class="tag" style="background:#d0e8f5;color:#4a7fa5;">AI Prompt Engineering</span>
+        </div>
+      </div>`
+  },
+  // INVOLVEMENT
+  {
+    id: 'involve', label: 'Involvement', x: 3.0, y: -1.5, z: -2.0,
+    size: 1.0, color: 0xb56a8a,
+    category: 'University Involvement', title: 'Campus & Community',
+    color2: '#b56a8a',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">Girls Who Code</div>
+        <div class="item-sub">University of Wisconsin – Madison</div>
+        <div class="item-date">September 2024 – Present</div>
+        <div class="item-body">
+          <ul>
+            <li>Building skills and confidence for the workforce alongside like-minded teammates</li>
+            <li>Communicating with clubs and organizations to develop upcoming projects</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Leadership</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Community</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Society of Women Engineers</div>
+        <div class="item-sub">University of Wisconsin – Madison</div>
+        <div class="item-date">August 2025 – Present</div>
+        <div class="item-body">
+          <ul>
+            <li>Improved <strong>high-frequency, fish-deterring underwater speaker system</strong> in Lake Michigan for NextEra Energy</li>
+            <li>Curated hardware requirements to uphold <strong>120–128 kHz</strong> frequencies for hundreds of yards</li>
+            <li>Collaborated with structural design and containment teams, mapping sound waves and preserving energy</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Hardware</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Acoustics</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">NextEra Energy</span>
+        </div>
+      </div>`
+  },
+  // AWARDS
+  {
+    id: 'awards', label: 'Certifications', x: -1.2, y: 2.8, z: -2.5,
+    size: 0.85, color: 0xc9953a,
+    category: 'Certifications & Awards', title: 'Recognition',
+    color2: '#c9953a',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">🐍 The Legend of Python</div>
+        <div class="item-sub">Codédex</div>
+        <div class="item-body"><p>Completed comprehensive Python curriculum through Codédex's gamified learning platform.</p></div>
+        <div class="tag-row"><span class="tag" style="background:#f5e4c3;color:#c9953a;">Python</span></div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">📱 Responsive Web Design</div>
+        <div class="item-sub">freeCodeCamp</div>
+        <div class="item-body"><p>Certified in HTML, CSS, and responsive design principles.</p></div>
+        <div class="tag-row"><span class="tag" style="background:#f5e4c3;color:#c9953a;">HTML/CSS</span><span class="tag" style="background:#f5e4c3;color:#c9953a;">Web Design</span></div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">📲 Mobile Application Curriculum</div>
+        <div class="item-sub">Kode With Klossy</div>
+        <div class="item-body"><p>Completed mobile app development curriculum focusing on Swift and iOS development.</p></div>
+        <div class="tag-row"><span class="tag" style="background:#f5e4c3;color:#c9953a;">Swift</span><span class="tag" style="background:#f5e4c3;color:#c9953a;">iOS</span><span class="tag" style="background:#f5e4c3;color:#c9953a;">Mobile</span></div>
+      </div>`
+  },
+  // AI / INTERESTS satellite
+  {
+    id: 'ai', label: 'AI & ML', x: 2.2, y: 2.5, z: -0.8,
+    size: 0.75, color: 0x9b7eb8,
+    category: 'Passion Area', title: 'AI & Machine Learning',
+    color2: '#9b7eb8',
+    content: `
+      <div class="panel-item">
+        <div class="item-title">Computer Vision</div>
+        <div class="item-body"><ul>
+          <li>YOLOv8 real-time object detection (SousChef)</li>
+          <li>Kinesics analysis — 6+ hand movement recognition (Stanford)</li>
+        </ul></div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Natural Language Processing</div>
+        <div class="item-body"><ul>
+          <li>OpenAI API integration for recipe generation</li>
+          <li>AI Prompt Engineering (listed as skill)</li>
+          <li>Fish Audio voice synthesis pipeline</li>
+        </ul></div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Neural Networks</div>
+        <div class="item-body"><p>Advanced study at Stanford — completed 3 major projects exploring neural network architecture.</p></div>
+      </div>`
+  },
+];
+
+const EDGES = [
+  ['center','edu'], ['center','exp'], ['center','proj'],
+  ['center','skills'], ['center','involve'], ['center','awards'],
+  ['center','ai'], ['proj','ai'], ['exp','ai'],
+];
+
+// ─── THREE.JS SCENE ───────────────────────────────────────────────────────────
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0); // renderer.setClearColor(0xfdf6ed, 1); 
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(0, 0, 11);
+
+// Lighting
+const ambient = new THREE.AmbientLight(0xfdf6ed, 0.8);
+scene.add(ambient);
+const dirLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+dirLight.position.set(5, 8, 5);
+scene.add(dirLight);
+const pointLight1 = new THREE.PointLight(0xc4633a, 0.8, 20);
+pointLight1.position.set(-4, 3, 3);
+scene.add(pointLight1);
+const pointLight2 = new THREE.PointLight(0x6b8c6e, 0.6, 20);
+pointLight2.position.set(4, -3, -2);
+scene.add(pointLight2);
+
+// Build nodes
+const nodeMeshes = {};
+const nodeGroup = new THREE.Group();
+scene.add(nodeGroup);
+
+NODES.forEach(n => {
+  const geo = new THREE.SphereGeometry(n.size * 0.55, 32, 32);
+  const mat = new THREE.MeshPhongMaterial({
+    color: n.color,
+    shininess: 80,
+    specular: 0xffffff,
+    transparent: true,
+    opacity: 0.92,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(n.x, n.y, n.z);
+  mesh.userData = { id: n.id, origColor: n.color, node: n };
+  nodeGroup.add(mesh);
+  nodeMeshes[n.id] = mesh;
+
+  // Glow ring for center
+  if (n.ring) {
+    const rGeo = new THREE.RingGeometry(0.75, 0.95, 64);
+    const rMat = new THREE.MeshBasicMaterial({
+      color: n.color, side: THREE.DoubleSide, transparent: true, opacity: 0.3
+    });
+    const ring = new THREE.Mesh(rGeo, rMat);
+    mesh.add(ring);
+  }
+
+  // Orbit ring for each node
+  const oGeo = new THREE.RingGeometry(n.size * 0.6, n.size * 0.65, 48);
+  const oMat = new THREE.MeshBasicMaterial({
+    color: n.color, side: THREE.DoubleSide, transparent: true, opacity: 0.25
+  });
+  const oRing = new THREE.Mesh(oGeo, oMat);
+  oRing.rotation.x = Math.random() * Math.PI;
+  oRing.rotation.y = Math.random() * Math.PI;
+  mesh.add(oRing);
+});
+
+// Build edges (lines)
+EDGES.forEach(([a, b]) => {
+  const nA = NODES.find(n => n.id === a);
+  const nB = NODES.find(n => n.id === b);
+  const points = [
+    new THREE.Vector3(nA.x, nA.y, nA.z),
+    new THREE.Vector3(nB.x, nB.y, nB.z)
+  ];
+  const geo = new THREE.BufferGeometry().setFromPoints(points);
+  const mat = new THREE.LineBasicMaterial({
+    color: 0xc4a090, transparent: true, opacity: 0.25
+  });
+  const line = new THREE.Line(geo, mat);
+  nodeGroup.add(line);
+});
+
+// ─── LABELS ────────────────────────────────────────────────────────────────────
+const labelsContainer = document.getElementById('labels');
+const labelEls = {};
+
+NODES.forEach(n => {
+  const div = document.createElement('div');
+  div.className = 'node-label';
+  div.innerHTML = `<span class="label-text">${n.label}</span>`;
+  labelsContainer.appendChild(div);
+  labelEls[n.id] = div;
+});
+
+function updateLabels() {
+  NODES.forEach(n => {
+    const mesh = nodeMeshes[n.id];
+    const pos = mesh.position.clone();
+    pos.applyMatrix4(nodeGroup.matrixWorld);
+    const projected = pos.clone().project(camera);
+    const x = (projected.x * 0.5 + 0.5) * window.innerWidth;
+    const y = (- projected.y * 0.5 + 0.5) * window.innerHeight;
+    const offset = n.id === 'center' ? -70 : -55;
+    labelEls[n.id].style.left = x + 'px';
+    labelEls[n.id].style.top = (y + offset) + 'px';
+    labelEls[n.id].style.opacity = projected.z < 1 ? '1' : '0';
+  });
+}
+
+// ─── RAYCASTER / CLICK ───────────────────────────────────────────────────────
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let hoveredId = null;
+const cursor = document.getElementById('cursor');
+
+function onMouseMove(e) {
+  const cx = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+  const cy = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+  cursor.style.left = cx + 'px';
+  cursor.style.top = cy + 'px';
+  mouse.x = (cx / window.innerWidth) * 2 - 1;
+  mouse.y = -(cy / window.innerHeight) * 2 + 1;
+  checkHover();
+  handleDrag(cx, cy);
+}
+
+function checkHover() {
+  raycaster.setFromCamera(mouse, camera);
+  const meshes = NODES.map(n => nodeMeshes[n.id]);
+  const hits = raycaster.intersectObjects(meshes);
+  if (hits.length > 0) {
+    const id = hits[0].object.userData.id;
+    if (id !== hoveredId) {
+      if (hoveredId) unhover(hoveredId);
+      hover(id);
+      hoveredId = id;
+    }
+    cursor.classList.add('hovering');
+    document.body.style.cursor = 'none';
+  } else {
+    if (hoveredId) { unhover(hoveredId); hoveredId = null; }
+    cursor.classList.remove('hovering');
+  }
+}
+
+function hover(id) {
+  const mesh = nodeMeshes[id];
+  mesh.material.emissive = new THREE.Color(mesh.userData.origColor);
+  mesh.material.emissiveIntensity = 0.3;
+}
+function unhover(id) {
+  const mesh = nodeMeshes[id];
+  mesh.material.emissive = new THREE.Color(0x000000);
+  mesh.material.emissiveIntensity = 0;
+}
+
+function onClick(e) {
+  if (wasDragging) return;
+  raycaster.setFromCamera(mouse, camera);
+  const meshes = NODES.map(n => nodeMeshes[n.id]);
+  const hits = raycaster.intersectObjects(meshes);
+  if (hits.length > 0) {
+    openPanel(hits[0].object.userData.node);
+  }
+}
+
+function onTouch(e) {
+  const t = e.touches[0];
+  mouse.x = (t.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(t.clientY / window.innerHeight) * 2 + 1;
+}
+
+// ─── DRAG ROTATE ─────────────────────────────────────────────────────────────
+let isDragging = false, wasDragging = false;
+let prevX = 0, prevY = 0;
+let rotX = 0, rotY = 0;
+let velX = 0, velY = 0;
+
+function onMouseDown(e) {
+  isDragging = true; wasDragging = false;
+  prevX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
+  prevY = e.clientY || (e.touches && e.touches[0].clientY) || 0;
+}
+function onMouseUp(e) {
+  isDragging = false;
+  setTimeout(() => { wasDragging = false; }, 50);
+}
+function handleDrag(cx, cy) {
+  if (!isDragging) return;
+  const dx = cx - prevX, dy = cy - prevY;
+  if (Math.abs(dx) > 2 || Math.abs(dy) > 2) wasDragging = true;
+  velY += dx * 0.004;
+  velX += dy * 0.004;
+  prevX = cx; prevY = cy;
+}
+
+// ─── PANEL ───────────────────────────────────────────────────────────────────
+function openPanel(node) {
+  document.getElementById('p-cat').textContent = node.category;
+  document.getElementById('p-cat').style.color = node.color2;
+  document.getElementById('p-title').textContent = node.title;
+  document.getElementById('p-div').style.background = node.color2;
+  document.getElementById('p-content').innerHTML = node.content;
+  document.getElementById('panel').classList.add('open');
+}
+function closePanel() {
+  document.getElementById('panel').classList.remove('open');
+}
+
+// ─── PARTICLES ───────────────────────────────────────────────────────────────
+const pCanvas = document.getElementById('particles');
+const pCtx = pCanvas.getContext('2d');
+pCanvas.width = window.innerWidth;
+pCanvas.height = window.innerHeight;
+
+const PARTICLE_COLORS = ['#c4633a','#6b8c6e','#c9953a','#8e6b8a','#4a7fa5','#b56a8a'];
+const particles = Array.from({ length: 55 }, () => ({
+  x: Math.random() * pCanvas.width,
+  y: Math.random() * pCanvas.height,
+  r: Math.random() * 2.5 + 0.5,
+  vx: (Math.random() - 0.5) * 0.3,
+  vy: (Math.random() - 0.5) * 0.3,
+  color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
+  alpha: Math.random() * 0.4 + 0.1,
+}));
+
+function drawParticles() {
+  pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = pCanvas.width;
+    if (p.x > pCanvas.width) p.x = 0;
+    if (p.y < 0) p.y = pCanvas.height;
+    if (p.y > pCanvas.height) p.y = 0;
+    pCtx.beginPath();
+    pCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    pCtx.fillStyle = p.color;
+    pCtx.globalAlpha = p.alpha;
+    pCtx.fill();
+    pCtx.globalAlpha = 1;
+  });
+}
+
+// ─── ANIMATE ─────────────────────────────────────────────────────────────────
+let t = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.008;
+
+  // Inertia rotation
+  velX *= 0.94; velY *= 0.94;
+  if (!isDragging) {
+    rotX += velX;
+    rotY += velY;
+    // gentle auto-rotate
+    rotY += 0.002;
+  }
+  nodeGroup.rotation.x = rotX;
+  nodeGroup.rotation.y = rotY;
+
+  // Node bob
+  NODES.forEach((n, i) => {
+    const mesh = nodeMeshes[n.id];
+    const bob = Math.sin(t + i * 0.8) * 0.04;
+    mesh.position.y = n.y + bob;
+    // Orbit rings spin
+    if (mesh.children[0]) mesh.children[0].rotation.z += 0.008;
+    if (mesh.children[1]) mesh.children[1].rotation.y += 0.012;
+  });
+
+  updateLabels();
+  drawParticles();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ─── EVENTS ──────────────────────────────────────────────────────────────────
+window.addEventListener('mousemove', onMouseMove);
+window.addEventListener('mousedown', onMouseDown);
+window.addEventListener('mouseup', onMouseUp);
+window.addEventListener('click', onClick);
+window.addEventListener('touchstart', e => { onMouseDown(e); onTouch(e); }, { passive: true });
+window.addEventListener('touchmove', e => {
+  const t = e.touches[0];
+  onMouseMove({ clientX: t.clientX, clientY: t.clientY });
+}, { passive: true });
+window.addEventListener('touchend', onMouseUp);
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  pCanvas.width = window.innerWidth;
+  pCanvas.height = window.innerHeight;
+});
+
+// ─── SPLASH ──────────────────────────────────────────────────────────────────
+function enterSite() {
+  document.getElementById('splash').classList.add('hidden');
+}
+</script>
+</body>
+</html>
