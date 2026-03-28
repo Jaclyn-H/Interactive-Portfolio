@@ -406,10 +406,18 @@ html, body {
 /* MOBILE */
 @media (max-width: 640px) {
   #panel { width: 100vw; }
-  #header { padding: 1rem 1.25rem; }
-  .header-name { font-size: 1.1rem; }
-  .header-links { gap: 1rem; }
-  .header-links a { font-size: 0.7rem; }
+  #panel-inner {
+    padding: 4rem 1.5rem 2rem; /* More space for the close button */
+  }
+  .panel-close {
+    width: 44px; /* Larger tap target for fingers */
+    height: 44px;
+    top: 1rem;
+    right: 1rem;
+  }
+  .splash-title {
+    font-size: 3.5rem; /* Ensure title doesn't overflow */
+  }
 }
 </style>
 </head>
@@ -945,6 +953,7 @@ function updateLabels() {
 
 // ─── RAYCASTER / CLICK ───────────────────────────────────────────────────────
 const raycaster = new THREE.Raycaster();
+raycaster.params.Line.threshold = 0.1; //lines easier to click
 const mouse = new THREE.Vector2();
 let hoveredId = null;
 const cursor = document.getElementById('cursor');
@@ -1050,7 +1059,10 @@ pCanvas.width = window.innerWidth;
 pCanvas.height = window.innerHeight;
 
 const PARTICLE_COLORS = ['#c4633a','#6b8c6e','#c9953a','#8e6b8a','#4a7fa5','#b56a8a'];
-const particles = Array.from({ length: 55 }, () => ({
+const isMobile = window.innerWidth < 640;
+const particleCount = isMobile ? 25 : 55; // less particles on mobile
+
+const particles = Array.from({ length: particleCount }, () => ({
   x: Math.random() * pCanvas.width,
   y: Math.random() * pCanvas.height,
   r: Math.random() * 2.5 + 0.5,
@@ -1116,14 +1128,26 @@ window.addEventListener('mousedown', onMouseDown);
 window.addEventListener('mouseup', onMouseUp);
 window.addEventListener('click', onClick);
 window.addEventListener('touchstart', e => { onMouseDown(e); onTouch(e); }, { passive: true });
-window.addEventListener('touchmove', e => {
+wwindow.addEventListener('touchmove', e => {
   const t = e.touches[0];
-  onMouseMove({ clientX: t.clientX, clientY: t.clientY });
+  // Calculate mouse coordinates for the Raycaster so tapping works
+  mouse.x = (t.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(t.clientY / window.innerHeight) * 2 + 1;
+  
+  // Pass to the drag handler
+  handleDrag(t.clientX, t.clientY);
 }, { passive: true });
 window.addEventListener('touchend', onMouseUp);
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
+  // adjust camera distance based on screen width
+  if (window.innerWidth < 640) {
+    camera.position.z = 16; // move back for mobile
+  } else {
+    camera.position.z = 11; // default for desktop
+  }
+  
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
   pCanvas.width = window.innerWidth;
