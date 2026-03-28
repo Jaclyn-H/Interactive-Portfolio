@@ -852,7 +852,8 @@ renderer.setClearColor(0x000000, 0); // renderer.setClearColor(0xfdf6ed, 1);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 100);
-camera.position.set(0, 0, 11);
+const initialZ = window.innerWidth < 640 ? 16 : 11;
+camera.position.set(0, 0, initialZ);
 
 // Lighting
 const ambient = new THREE.AmbientLight(0xfdf6ed, 0.8);
