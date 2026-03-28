@@ -953,6 +953,7 @@ function updateLabels() {
 
 // ─── RAYCASTER / CLICK ───────────────────────────────────────────────────────
 const raycaster = new THREE.Raycaster();
+raycaster.params.Mesh.threshold = 0.5;
 raycaster.params.Line.threshold = 0.1; //lines easier to click
 const mouse = new THREE.Vector2();
 let hoveredId = null;
@@ -1127,7 +1128,20 @@ window.addEventListener('mousemove', onMouseMove);
 window.addEventListener('mousedown', onMouseDown);
 window.addEventListener('mouseup', onMouseUp);
 window.addEventListener('click', onClick);
-window.addEventListener('touchstart', e => { onMouseDown(e); onTouch(e); }, { passive: true });
+window.addEventListener('touchstart', e => {
+  const t = e.touches[0];
+  isDragging = true;
+  wasDragging = false;
+  
+  //set initial positions for drag calculation
+  prevX = t.clientX;
+  prevY = t.clientY;
+
+  //update raycaster coordinates immediately on tap
+  mouse.x = (t.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(t.clientY / window.innerHeight) * 2 + 1;
+}, { passive: true });
+
 window.addEventListener('touchmove', e => {
   const t = e.touches[0];
   // Calculate mouse coordinates for the Raycaster so tapping works
@@ -1137,7 +1151,13 @@ window.addEventListener('touchmove', e => {
   // Pass to the drag handler
   handleDrag(t.clientX, t.clientY);
 }, { passive: true });
-window.addEventListener('touchend', onMouseUp);
+window.addEventListener('touchend', e => {
+  //if the user tapped quickly (didn't drag), trigger click logic
+  if (!wasDragging) {
+    onClick(e);
+  }
+  onMouseUp(e);
+}, { passive: true });
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
