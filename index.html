@@ -1128,7 +1128,7 @@ window.addEventListener('mousedown', onMouseDown);
 window.addEventListener('mouseup', onMouseUp);
 window.addEventListener('click', onClick);
 window.addEventListener('touchstart', e => { onMouseDown(e); onTouch(e); }, { passive: true });
-wwindow.addEventListener('touchmove', e => {
+window.addEventListener('touchmove', e => {
   const t = e.touches[0];
   // Calculate mouse coordinates for the Raycaster so tapping works
   mouse.x = (t.clientX / window.innerWidth) * 2 - 1;
