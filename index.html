@@ -82,6 +82,56 @@ html, body {
 .star:nth-child(11) { top: 0%;   right: 42%;   animation-delay: 2.6s;  animation-duration: 4.0s; }
 .star:nth-child(12) { top: 18%;  right: 55%;   animation-delay: 3.0s;  animation-duration: 2.9s; }
 
+/* ASTRONAUT BUTTON */
+#astronaut-container {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+}
+
+#astronaut-btn {
+  width: 110px;
+  height: 110px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+#astronaut-btn:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 6px 20px rgba(0,0,0,0.3));
+}
+
+.speech-bubble {
+  position: absolute;
+  right: 110px;
+  bottom: 54px;
+
+  padding: 8px 12px;
+  background: #071c25;
+  color: white;
+  border-radius: 12px;
+
+  font-size: 0.75rem;
+  white-space: nowrap;   /* keeps “Psssst!” on one line */
+}
+
+.speech-bubble::before {
+  content: "";
+  position: absolute;
+
+  right: -6px;
+  bottom: 12px;
+
+  width: 0;
+  height: 0;
+
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 10px solid #071c25; /* tail color */
+}
+
+
 /* CUSTOM CURSOR */
 #cursor {
   position: fixed;
@@ -421,7 +471,14 @@ html, body {
 }
 </style>
 </head>
+
+
 <body>
+
+  <div id="astronaut-container">
+    <img id="astronaut-btn" src="images/astronaut.png" alt="Go to portfolio">
+    <div class="speech-bubble">Psssst!</div>
+  </div>
 
 <div id="cursor"></div>
 
@@ -488,6 +545,15 @@ html, body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+  
+  document.getElementById('astronaut-btn').addEventListener('click', () => {
+    document.body.style.transition = "opacity 0.6s ease";
+    document.body.style.opacity = 0;
+
+    setTimeout(() => {
+      window.location.href = 'blog.html';
+    }, 600);
+  });
 // ─── DATA ────────────────────────────────────────────────────────────────────
 const NODES = [
   // CENTER
@@ -569,6 +635,23 @@ const NODES = [
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">Leadership</span>
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">Curriculum Design</span>
           <span class="tag" style="background:#f5e4c3;color:#c9953a;">Team Management</span>
+        </div>
+      </div>
+      <div class="panel-item">
+        <div class="item-title">Lifeguard</div>
+        <div class="item-sub">Sesame Place Philadelphia</div>
+        <div class="item-date">📍 Langhorne, PA · May 2023 – August 2023</div>
+        <div class="item-body">
+          <ul>
+            <li>Safeguarded up to 10000 park attendees per day, ensuring the safety and enjoyment of all park guests.</li>
+            <li>Executed safety checks, consistently scanning area and structures for potential hazards.</li>
+            <li>Certified in CPR and First Aid, staying to date with monthly audits.</li>
+          </ul>
+        </div>
+        <div class="tag-row">
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Safety</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">CPR + First Aid</span>
+          <span class="tag" style="background:#f5e4c3;color:#c9953a;">Quality Assurance</span>
         </div>
       </div>
       <div class="panel-item">
